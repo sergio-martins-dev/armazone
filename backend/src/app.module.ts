@@ -5,6 +5,7 @@ import { ProdutoEntity } from './entities/produto.entity';
 import { EstoqueEntity } from './entities/estoque.entity';
 import { EstoqueProdutoEntity } from './entities/estoque_produto.entity';
 import { ProdutosModule } from './modules/produtos/produtos.module';
+import { EstoquesModule } from './modules/estoques/estoques.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ProdutosModule } from './modules/produtos/produtos.module';
       synchronize: true, // ⚠️ Apenas para dev, em produção use migrations
     }),
     ProdutosModule,
+    EstoquesModule,
   ],
 })
 export class AppModule {}
