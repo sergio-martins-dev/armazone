@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Patch,
+  Delete,
+} from '@nestjs/common';
 import { ProdutosService } from './produtos.service';
 
 @Controller('produtos')
@@ -19,5 +27,18 @@ export class ProdutosController {
       body.preco,
       body.codigoBarras,
     );
+  }
+
+  @Patch(':codigoBarras')
+  atualizarProduto(
+    @Param('codigoBarras') codigoBarras: string,
+    @Body() body: { nome?: string; preco?: number },
+  ) {
+    return this.produtosService.atualizarProduto(codigoBarras, body);
+  }
+
+  @Delete(':codigoBarras')
+  deletarProduto(@Param('codigoBarras') codigoBarras: string) {
+    return this.produtosService.deletarProduto(codigoBarras);
   }
 }

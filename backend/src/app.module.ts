@@ -7,6 +7,8 @@ import { EstoqueProdutoEntity } from './entities/estoque_produto.entity';
 import { ProdutosModule } from './modules/produtos/produtos.module';
 import { EstoquesModule } from './modules/estoques/estoques.module';
 import { EstoqueProdutoModule } from './modules/estoque_produto/estoque_produto.module';
+import { VendasModule } from './modules/vendas/vendas.module';
+import { VendaEntity } from './entities/venda.entity';
 
 @Module({
   imports: [
@@ -18,12 +20,18 @@ import { EstoqueProdutoModule } from './modules/estoque_produto/estoque_produto.
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [ProdutoEntity, EstoqueEntity, EstoqueProdutoEntity],
+      entities: [
+        ProdutoEntity,
+        EstoqueEntity,
+        EstoqueProdutoEntity,
+        VendaEntity,
+      ],
       synchronize: true, // ⚠️ Apenas para dev, em produção use migrations
     }),
     ProdutosModule,
     EstoquesModule,
     EstoqueProdutoModule,
+    VendasModule,
   ],
 })
 export class AppModule {}
