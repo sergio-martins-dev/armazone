@@ -6,6 +6,9 @@ export class ProdutoEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ unique: true })
+  codigoBarras: string;
+
   @Column()
   nome: string;
 

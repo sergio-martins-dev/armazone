@@ -11,7 +11,13 @@ export class ProdutosController {
   }
 
   @Post()
-  criarProduto(@Body() body: { nome: string; preco: number }) {
-    return this.produtosService.criarProduto(body.nome, body.preco);
+  criarProduto(
+    @Body() body: { nome: string; preco: number; codigoBarras: string },
+  ) {
+    return this.produtosService.criarProduto(
+      body.nome,
+      body.preco,
+      body.codigoBarras,
+    );
   }
 }

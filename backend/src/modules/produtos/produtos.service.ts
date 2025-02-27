@@ -14,8 +14,12 @@ export class ProdutosService {
     return this.produtoRepository.find();
   }
 
-  async criarProduto(nome: string, preco: number) {
-    const novoProduto = this.produtoRepository.create({ nome, preco });
+  async criarProduto(nome: string, preco: number, codigoBarras: string) {
+    const novoProduto = this.produtoRepository.create({
+      nome,
+      preco,
+      codigoBarras,
+    });
     return this.produtoRepository.save(novoProduto);
   }
 }
