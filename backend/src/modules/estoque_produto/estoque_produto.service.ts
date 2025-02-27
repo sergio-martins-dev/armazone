@@ -67,4 +67,25 @@ export class EstoqueProdutoService {
       produto: { id: produtoId },
     });
   }
+
+  async darBaixaNoEstoque(
+    estoqueId: number,
+    produtoId: number,
+    quantidade: number,
+  ) {
+    const relacao = await this.estoqueProdutoRepository.findOne({
+      where: { estoque: { id: estoqueId }, produto: { id: produtoId } },
+    });
+
+    if (!relacao) {
+      throw new Error('Produto não encontrado neste estoque.');
+    }
+
+    if (relacao.quantidade < quantidade) {
+      throw new Error('Estoque insuficiente.');
+    }
+
+    relacao.quantidade -= quantidade;
+    return this.estoqueProdutoRepository.save(relacao);
+  }
 }

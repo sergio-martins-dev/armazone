@@ -31,4 +31,15 @@ export class EstoqueProdutoController {
       produtoId,
     );
   }
+
+  @Post('dar-baixa')
+  darBaixaNoEstoque(
+    @Body() body: { estoqueId: number; produtoId: number; quantidade: number },
+  ) {
+    return this.estoqueProdutoService.darBaixaNoEstoque(
+      body.estoqueId,
+      body.produtoId,
+      body.quantidade,
+    );
+  }
 }
