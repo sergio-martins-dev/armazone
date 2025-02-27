@@ -21,24 +21,29 @@ export class EstoqueProdutoController {
     return this.estoqueProdutoService.listarProdutosDoEstoque(estoqueId);
   }
 
-  @Delete(':estoqueId/:produtoId')
+  @Delete(':estoqueId/:codigoBarras')
   removerProdutoDoEstoque(
     @Param('estoqueId') estoqueId: number,
-    @Param('produtoId') produtoId: number,
+    @Param('codigoBarras') codigoBarras: string,
   ) {
     return this.estoqueProdutoService.removerProdutoDoEstoque(
       estoqueId,
-      produtoId,
+      codigoBarras,
     );
   }
 
   @Post('dar-baixa')
   darBaixaNoEstoque(
-    @Body() body: { estoqueId: number; produtoId: number; quantidade: number },
+    @Body()
+    body: {
+      estoqueId: number;
+      codigoBarras: string;
+      quantidade: number;
+    },
   ) {
     return this.estoqueProdutoService.darBaixaNoEstoque(
       body.estoqueId,
-      body.produtoId,
+      body.codigoBarras,
       body.quantidade,
     );
   }

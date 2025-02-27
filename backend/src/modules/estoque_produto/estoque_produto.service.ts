@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EstoqueProdutoEntity } from '../../entities/estoque_produto.entity';
@@ -61,28 +65,41 @@ export class EstoqueProdutoService {
   }
 
   // Remover um produto do estoque
-  async removerProdutoDoEstoque(estoqueId: number, produtoId: number) {
-    return this.estoqueProdutoRepository.delete({
-      estoque: { id: estoqueId },
-      produto: { id: produtoId },
+  async removerProdutoDoEstoque(estoqueId: number, codigoBarras: string) {
+    const produto = await this.produtoRepository.findOne({
+      where: { codigoBarras: codigoBarras },
     });
+
+    const response = await this.estoqueProdutoRepository.delete({
+      estoque: { id: estoqueId },
+      produto: { id: produto.id },
+    });
+    return { ...response, ...produto };
   }
 
   async darBaixaNoEstoque(
     estoqueId: number,
-    produtoId: number,
+    codigoBarras: string,
     quantidade: number,
   ) {
+    const produto = await this.produtoRepository.findOne({
+      where: { codigoBarras },
+    });
+
+    if (!produto) {
+      throw new NotFoundException('Produto não encontrado.');
+    }
+
     const relacao = await this.estoqueProdutoRepository.findOne({
-      where: { estoque: { id: estoqueId }, produto: { id: produtoId } },
+      where: { estoque: { id: estoqueId }, produto: { id: produto.id } },
     });
 
     if (!relacao) {
-      throw new Error('Produto não encontrado neste estoque.');
+      throw new NotFoundException('Produto não encontrado neste estoque.');
     }
 
     if (relacao.quantidade < quantidade) {
-      throw new Error('Estoque insuficiente.');
+      throw new BadRequestException('Estoque insuficiente.');
     }
 
     relacao.quantidade -= quantidade;

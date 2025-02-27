@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProdutoEntity } from '../../entities/produto.entity';
@@ -15,6 +15,16 @@ export class ProdutosService {
   }
 
   async criarProduto(nome: string, preco: number, codigoBarras: string) {
+    const produtoExiste = await this.produtoRepository.findOne({
+      where: { codigoBarras },
+    });
+
+    if (produtoExiste) {
+      throw new BadRequestException(
+        'Já existe um produto com esse código de barras.',
+      );
+    }
+
     const novoProduto = this.produtoRepository.create({
       nome,
       preco,
