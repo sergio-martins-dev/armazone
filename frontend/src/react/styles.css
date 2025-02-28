@@ -1,0 +1,144 @@
+/* 1) Reset básico */
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+/* 2) Corpo e Container */
+body {
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	background-color: #f8f9fa; /* Cinza clarinho */
+	color: #333;
+}
+
+/* Contêiner que segura todos os botões do menu */
+.menu-container {
+	display: flex; /* Flexbox para organizar os botões em linha */
+	flex-direction: column;
+	align-items: center; /* Centraliza horizontalmente */
+	gap: 10px; /* Espaçamento horizontal entre os botões */
+	margin-top: 20px; /* Espaço acima do contêiner */
+}
+
+/* Botões do menu */
+.menu-btn {
+	padding: 14px 28px; /* Aumenta tamanho do botão (altura e largura) */
+	font-size: 16px; /* Tamanho da fonte */
+	border-radius: 6px; /* Arredonda cantos */
+	border: none;
+	background-color: #007bff; /* Azul padrão */
+	color: #fff;
+	transition: 0.3s;
+	cursor: pointer;
+}
+
+/* Efeito hover */
+.menu-btn:hover {
+	background-color: #0056b3; /* Azul mais escuro */
+}
+
+.container {
+	max-width: 800px;
+	margin: 50px auto;
+	background: #fff;
+	padding: 30px;
+	border-radius: 10px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+	/* Para centralizar tudo vertical/horizontalmente, se quiser */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+/* 3) Títulos */
+h1,
+h2 {
+	color: #333;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+/* 4) Formulários */
+.form-group {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	margin-bottom: 15px;
+}
+
+.form-group label {
+	font-weight: 600;
+	margin-bottom: 5px;
+	color: #555;
+}
+
+.form-group input {
+	width: 100%;
+	padding: 10px 12px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 14px;
+}
+
+/* 5) Botões gerais */
+/* Botão base */
+.btn {
+	padding: 16px 32px; /* Botão mais "alto" e mais "largo" */
+	font-size: 18px; /* Fonte maior */
+	border-radius: 6px;
+	border: none;
+	cursor: pointer;
+	transition: 0.3s;
+	text-align: center;
+	display: inline-block;
+	margin: 12px 8px; /* Ajuste no espaçamento externo */
+}
+
+/* Botão primário (azul) */
+.btn-primary {
+	background-color: #007bff;
+	color: #fff;
+}
+.btn-primary:hover {
+	background-color: #0056b3;
+}
+
+/* Botão secundário (cinza escuro) - caso queira outra cor para "Voltar" */
+.btn-secondary {
+	background-color: #6c757d;
+	color: #fff;
+}
+.btn-secondary:hover {
+	background-color: #5a6268;
+}
+
+.menu {
+	background-color: #007bff;
+	color: white;
+}
+.menu:hover {
+	background-color: #0056b3;
+}
+
+/* 8) Mensagens */
+.mensagem {
+	padding: 10px;
+	margin: 15px auto;
+	text-align: center;
+	border-radius: 5px;
+	width: 80%;
+	max-width: 300px;
+	font-weight: bold;
+}
+
+.mensagem.sucesso {
+	background-color: #4caf50;
+	color: white;
+}
+
+.mensagem.erro {
+	background-color: #f44336;
+	color: white;
+}
