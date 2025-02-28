@@ -7,11 +7,16 @@ export class EstoqueProdutoController {
 
   @Post()
   adicionarProdutoAoEstoque(
-    @Body() body: { estoqueId: number; produtoId: number; quantidade: number },
+    @Body()
+    body: {
+      estoqueId: number;
+      codigoBarras: string;
+      quantidade: number;
+    },
   ) {
     return this.estoqueProdutoService.adicionarProdutoAoEstoque(
       body.estoqueId,
-      body.produtoId,
+      body.codigoBarras,
       body.quantidade,
     );
   }

@@ -25,14 +25,14 @@ export class EstoqueProdutoService {
   // Adicionar produto a um estoque
   async adicionarProdutoAoEstoque(
     estoqueId: number,
-    produtoId: number,
+    codigoBarras: string,
     quantidade: number,
   ) {
     const estoque = await this.estoqueRepository.findOne({
       where: { id: estoqueId },
     });
     const produto = await this.produtoRepository.findOne({
-      where: { id: produtoId },
+      where: { codigoBarras },
     });
 
     if (!estoque || !produto) {
@@ -40,7 +40,7 @@ export class EstoqueProdutoService {
     }
 
     let relacao = await this.estoqueProdutoRepository.findOne({
-      where: { estoque: { id: estoqueId }, produto: { id: produtoId } },
+      where: { estoque: { id: estoqueId }, produto: { codigoBarras } },
     });
 
     if (relacao) {

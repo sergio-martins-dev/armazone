@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Menu from "./Menu";
 import Produtos from "./Produtos";
+import Estoques from "./Estoques"; // <-- import novo
 import Dashboard from "./Dashboard";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
@@ -25,9 +26,7 @@ function App() {
 		<Container className="mt-5">
 			{telaAtual === "menu" && <Menu abrirTela={abrirTela} />}
 			{telaAtual === "produtos" && <Produtos voltar={voltar} />}
-			{telaAtual === "estoque" && (
-				<h2 className="text-center">📦 Tela de Estoque</h2>
-			)}
+			{telaAtual === "estoque" && <Estoques voltar={voltar} />}
 			{telaAtual === "vendas" && (
 				<h2 className="text-center">💰 Tela de Vendas</h2>
 			)}

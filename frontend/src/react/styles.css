@@ -5,11 +5,12 @@
 	padding: 0;
 }
 
-/* 2) Corpo e Container */
+/* styles.css ou index.css */
 body {
-	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-	background-color: #f8f9fa; /* Cinza clarinho */
-	color: #333;
+	background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+	margin: 0;
+	padding: 0;
+	min-height: 100vh; /* Garante que ocupe a tela toda */
 }
 
 /* Contêiner que segura todos os botões do menu */
