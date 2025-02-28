@@ -133,9 +133,6 @@ function Relatorios({ voltar }) {
 						<Button variant="primary" size="lg" onClick={gerarRelatorio}>
 							Gerar Relatório
 						</Button>
-						<Button variant="secondary" size="lg" onClick={voltar}>
-							🔙 Menu
-						</Button>
 					</div>
 				</Form>
 

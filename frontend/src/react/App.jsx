@@ -6,6 +6,7 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Relatorios from "./Relatorios";
+import Vendas from "./Vendas";
 
 function App() {
 	const [historico, setHistorico] = useState(["menu"]);
@@ -27,9 +28,7 @@ function App() {
 			{telaAtual === "menu" && <Menu abrirTela={abrirTela} />}
 			{telaAtual === "produtos" && <Produtos voltar={voltar} />}
 			{telaAtual === "estoque" && <Estoques voltar={voltar} />}
-			{telaAtual === "vendas" && (
-				<h2 className="text-center">💰 Tela de Vendas</h2>
-			)}
+			{telaAtual === "vendas" && <Vendas voltar={voltar} />}
 			{telaAtual === "relatorios" && <Relatorios voltar={voltar} />}
 
 			{/* Botão de voltar (aparece em todas as telas, exceto no menu) */}

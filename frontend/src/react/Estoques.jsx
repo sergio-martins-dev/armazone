@@ -222,7 +222,7 @@ function Estoques({ voltar }) {
 										className="w-100"
 										onClick={() => abrirMenuEstoque(est)}
 									>
-										{est.nome}
+										{est.nome} - ID: {est.id}
 									</Button>
 								</Col>
 							))}
