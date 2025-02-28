@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import Menu from "./Menu";
 import Produtos from "./Produtos";
 import Estoques from "./Estoques"; // <-- import novo
-import Dashboard from "./Dashboard";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Relatorios from "./Relatorios";
 
 function App() {
 	const [historico, setHistorico] = useState(["menu"]);
@@ -30,7 +30,7 @@ function App() {
 			{telaAtual === "vendas" && (
 				<h2 className="text-center">💰 Tela de Vendas</h2>
 			)}
-			{telaAtual === "relatorios" && <Dashboard />}
+			{telaAtual === "relatorios" && <Relatorios voltar={voltar} />}
 
 			{/* Botão de voltar (aparece em todas as telas, exceto no menu) */}
 			{telaAtual !== "menu" && (

@@ -28,7 +28,13 @@ export class VendasController {
     @Query('dataInicial') dataInicial?: string,
     @Query('dataFinal') dataFinal?: string,
     @Query('estoqueId') estoqueId?: number,
+    @Query('codigoBarras') codigoBarras?: string,
   ) {
-    return this.vendasService.gerarRelatorio(dataInicial, dataFinal, estoqueId);
+    return this.vendasService.gerarRelatorio(
+      dataInicial,
+      dataFinal,
+      estoqueId,
+      codigoBarras,
+    );
   }
 }

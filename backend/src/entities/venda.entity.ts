@@ -22,6 +22,9 @@ export class VendaEntity {
   @Column('int')
   quantidade: number;
 
+  @Column()
+  codigoBarras: string;
+
   @Column('decimal', { precision: 10, scale: 2 })
   precoTotal: number;
 

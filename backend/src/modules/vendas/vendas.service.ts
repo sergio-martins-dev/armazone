@@ -31,6 +31,7 @@ export class VendasService {
 
     const venda = this.vendaRepository.create({
       estoque: { id: estoqueId },
+      codigoBarras,
       produto,
       quantidade,
       precoTotal,
@@ -44,6 +45,7 @@ export class VendasService {
     dataInicial?: string,
     dataFinal?: string,
     estoqueId?: number,
+    codigoBarras?: string,
   ) {
     const where: any = {};
 
@@ -53,6 +55,10 @@ export class VendasService {
 
     if (estoqueId) {
       where.estoque = { id: estoqueId };
+    }
+
+    if (codigoBarras) {
+      where.codigoBarras = codigoBarras;
     }
 
     return this.vendaRepository.find({ where });
