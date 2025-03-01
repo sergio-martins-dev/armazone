@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { EstoqueProdutoEntity } from '../../entities/estoque_produto.entity';
 import { EstoqueEntity } from '../../entities/estoque.entity';
 import { ProdutoEntity } from '../../entities/produto.entity';
+import { BaixaEstoqueEntity } from 'src/entities/baixa_estoque.entity';
 
 @Injectable()
 export class EstoqueProdutoService {
@@ -20,6 +21,9 @@ export class EstoqueProdutoService {
 
     @InjectRepository(ProdutoEntity)
     private readonly produtoRepository: Repository<ProdutoEntity>,
+
+    @InjectRepository(BaixaEstoqueEntity)
+    private baixaEstoqueRepository: Repository<BaixaEstoqueEntity>,
   ) {}
 
   // Adicionar produto a um estoque
@@ -64,23 +68,51 @@ export class EstoqueProdutoService {
     });
   }
 
-  // Remover um produto do estoque
-  async removerProdutoDoEstoque(estoqueId: number, codigoBarras: string) {
+  async removerProdutoDoEstoque(
+    estoqueId: number,
+    codigoBarras: string,
+    motivo: string,
+  ) {
     const produto = await this.produtoRepository.findOne({
-      where: { codigoBarras: codigoBarras },
+      where: { codigoBarras },
     });
 
-    const response = await this.estoqueProdutoRepository.delete({
+    if (!produto) {
+      throw new Error('Produto não encontrado.');
+    }
+
+    const estoqueProduto = await this.estoqueProdutoRepository.findOne({
+      where: { estoque: { id: estoqueId }, produto: { id: produto.id } },
+    });
+
+    if (!estoqueProduto) {
+      throw new Error('Produto não encontrado no estoque.');
+    }
+
+    // 🔹 Salva o histórico de baixa antes de remover
+    const baixa = this.baixaEstoqueRepository.create({
+      estoque: { id: estoqueId },
+      produto,
+      quantidade: estoqueProduto.quantidade,
+      motivo,
+    });
+
+    await this.baixaEstoqueRepository.save(baixa);
+
+    // 🔹 Remove o produto do estoque
+    await this.estoqueProdutoRepository.delete({
       estoque: { id: estoqueId },
       produto: { id: produto.id },
     });
-    return { ...response, ...produto };
+
+    return { mensagem: 'Produto removido do estoque com sucesso.', baixa };
   }
 
   async darBaixaNoEstoque(
     estoqueId: number,
     codigoBarras: string,
     quantidade: number,
+    motivo: string,
   ) {
     const produto = await this.produtoRepository.findOne({
       where: { codigoBarras },
@@ -102,7 +134,26 @@ export class EstoqueProdutoService {
       throw new BadRequestException('Estoque insuficiente.');
     }
 
+    // 🔹 Salva o histórico de baixa antes de remover
+    const baixa = this.baixaEstoqueRepository.create({
+      estoque: { id: estoqueId },
+      produto,
+      quantidade,
+      motivo,
+    });
+
+    await this.baixaEstoqueRepository.save(baixa);
+
     relacao.quantidade -= quantidade;
     return this.estoqueProdutoRepository.save(relacao);
+  }
+
+  async listarBaixas(estoqueId?: number) {
+    const baixas = await this.baixaEstoqueRepository.find({
+      order: { dataBaixa: 'DESC' },
+    });
+    if (estoqueId)
+      return baixas.filter((baixa) => baixa.estoque.id === Number(estoqueId));
+    return baixas;
   }
 }

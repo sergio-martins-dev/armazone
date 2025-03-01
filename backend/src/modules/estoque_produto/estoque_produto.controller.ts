@@ -30,10 +30,12 @@ export class EstoqueProdutoController {
   removerProdutoDoEstoque(
     @Param('estoqueId') estoqueId: number,
     @Param('codigoBarras') codigoBarras: string,
+    @Body('motivo') motivo: string,
   ) {
     return this.estoqueProdutoService.removerProdutoDoEstoque(
       estoqueId,
       codigoBarras,
+      motivo,
     );
   }
 
@@ -44,12 +46,14 @@ export class EstoqueProdutoController {
       estoqueId: number;
       codigoBarras: string;
       quantidade: number;
+      motivo: string;
     },
   ) {
     return this.estoqueProdutoService.darBaixaNoEstoque(
       body.estoqueId,
       body.codigoBarras,
       body.quantidade,
+      body.motivo,
     );
   }
 }

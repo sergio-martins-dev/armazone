@@ -9,6 +9,7 @@ import { EstoquesModule } from './modules/estoques/estoques.module';
 import { EstoqueProdutoModule } from './modules/estoque_produto/estoque_produto.module';
 import { VendasModule } from './modules/vendas/vendas.module';
 import { VendaEntity } from './entities/venda.entity';
+import { BaixaEstoqueEntity } from './entities/baixa_estoque.entity';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { VendaEntity } from './entities/venda.entity';
         EstoqueEntity,
         EstoqueProdutoEntity,
         VendaEntity,
+        BaixaEstoqueEntity,
       ],
       synchronize: true, // ⚠️ Apenas para dev, em produção use migrations
     }),

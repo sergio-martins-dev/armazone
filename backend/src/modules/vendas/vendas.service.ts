@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
 import { VendaEntity } from '../../entities/venda.entity';
 import { ProdutoEntity } from '../../entities/produto.entity';
+import { EstoqueProdutoEntity } from 'src/entities/estoque_produto.entity';
 
 @Injectable()
 export class VendasService {
@@ -12,9 +13,11 @@ export class VendasService {
 
     @InjectRepository(ProdutoEntity)
     private readonly produtoRepository: Repository<ProdutoEntity>,
+
+    @InjectRepository(EstoqueProdutoEntity)
+    private readonly estoqueProdutoRepository: Repository<EstoqueProdutoEntity>,
   ) {}
 
-  // Registrar uma nova venda com código de barras
   async registrarVenda(
     estoqueId: number,
     codigoBarras: string,
@@ -29,6 +32,16 @@ export class VendasService {
       throw new Error('Produto não encontrado.');
     }
 
+    // 🔹 Verifica se o produto existe no estoque e tem quantidade suficiente
+    const estoqueProduto = await this.estoqueProdutoRepository.findOne({
+      where: { estoque: { id: estoqueId }, produto: { id: produto.id } },
+    });
+
+    if (!estoqueProduto || estoqueProduto.quantidade < quantidade) {
+      throw new Error('Estoque insuficiente.');
+    }
+
+    // 🔹 Cria a venda
     const venda = this.vendaRepository.create({
       estoque: { id: estoqueId },
       codigoBarras,
@@ -37,7 +50,13 @@ export class VendasService {
       precoTotal,
     });
 
-    return this.vendaRepository.save(venda);
+    await this.vendaRepository.save(venda);
+
+    // 🔹 Atualiza a quantidade do produto no estoque
+    estoqueProduto.quantidade -= quantidade;
+    await this.estoqueProdutoRepository.save(estoqueProduto);
+
+    return venda;
   }
 
   // Relatório de vendas (opcionalmente filtrado por data e estoque)

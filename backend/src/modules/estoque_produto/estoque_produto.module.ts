@@ -7,6 +7,7 @@ import { EstoqueEntity } from '../../entities/estoque.entity';
 import { ProdutoEntity } from '../../entities/produto.entity';
 import { EstoquesModule } from '../estoques/estoques.module';
 import { ProdutosModule } from '../produtos/produtos.module';
+import { BaixaEstoqueEntity } from 'src/entities/baixa_estoque.entity';
 
 @Module({
   imports: [
@@ -14,11 +15,13 @@ import { ProdutosModule } from '../produtos/produtos.module';
       EstoqueProdutoEntity,
       EstoqueEntity,
       ProdutoEntity,
+      BaixaEstoqueEntity,
     ]),
     EstoquesModule,
     ProdutosModule,
   ],
   providers: [EstoqueProdutoService],
   controllers: [EstoqueProdutoController],
+  exports: [EstoqueProdutoService],
 })
 export class EstoqueProdutoModule {}

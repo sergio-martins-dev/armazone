@@ -29,6 +29,7 @@ function Estoques({ voltar }) {
 	// Campos para adicionar/baixar/deletar
 	const [codigoBarras, setCodigoBarras] = useState("");
 	const [quantidade, setQuantidade] = useState("");
+	const [motivo, setMotivo] = useState("");
 
 	// Mensagem de erro ou sucesso
 	const [mensagem, setMensagem] = useState(null);
@@ -133,7 +134,8 @@ function Estoques({ voltar }) {
 			body: JSON.stringify({
 				estoqueId: estoqueSelecionado.id,
 				codigoBarras,
-				quantidade: parseInt(quantidade, 10)
+				quantidade: parseInt(quantidade, 10),
+				motivo
 			})
 		})
 			.then(async (res) => {
@@ -162,7 +164,9 @@ function Estoques({ voltar }) {
 		fetch(
 			`http://localhost:4000/estoque-produto/${estoqueSelecionado.id}/${codigoBarras}`,
 			{
-				method: "DELETE"
+				method: "DELETE",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ motivo })
 			}
 		)
 			.then(async (res) => {
@@ -180,6 +184,26 @@ function Estoques({ voltar }) {
 					texto: data.message || "Produto deletado com sucesso!"
 				});
 				setCodigoBarras("");
+			})
+			.catch((err) => {
+				setMensagem({ tipo: "danger", texto: err.message });
+			});
+	}
+
+	function listarBaixas() {
+		if (!estoqueSelecionado) return;
+		fetch(`http://localhost:4000/vendas/baixas/${estoqueSelecionado.id}`)
+			.then((res) => {
+				if (!res.ok) throw new Error("Erro ao buscar baixas do estoque.");
+				return res.json();
+			})
+			.then((data) => {
+				setItensEstoque(data);
+				setModoEstoque("baixas");
+				setMensagem({
+					tipo: "success",
+					texto: "Baixas carregadas com sucesso!"
+				});
 			})
 			.catch((err) => {
 				setMensagem({ tipo: "danger", texto: err.message });
@@ -267,10 +291,26 @@ function Estoques({ voltar }) {
 									size="lg"
 									className="w-100"
 									onClick={() => {
+										setModoEstoque("deletar");
+										limparMensagem();
+										setCodigoBarras("");
+										setQuantidade("");
+									}}
+								>
+									Deletar Produtos
+								</Button>
+							</Col>
+							<Col xs={12}>
+								<Button
+									variant="primary"
+									size="lg"
+									className="w-100"
+									onClick={() => {
 										setModoEstoque("baixar");
 										limparMensagem();
 										setCodigoBarras("");
 										setQuantidade("");
+										setMotivo("");
 									}}
 								>
 									Dar Baixa
@@ -281,21 +321,16 @@ function Estoques({ voltar }) {
 									variant="primary"
 									size="lg"
 									className="w-100"
-									onClick={() => {
-										setModoEstoque("deletar");
-										limparMensagem();
-										setCodigoBarras("");
-										setQuantidade("");
-									}}
+									onClick={listarBaixas}
 								>
-									Deletar Produtos
+									Listar Baixas
 								</Button>
 							</Col>
 						</Row>
 					</>
 				)}
 
-				{/* Se o modoEstoque for 'ver', exibe a lista de produtos */}
+				{/* Modo: Ver Estoque */}
 				{estoqueSelecionado && modoEstoque === "ver" && (
 					<>
 						<h4 className="text-center mt-3">
@@ -330,9 +365,44 @@ function Estoques({ voltar }) {
 					</>
 				)}
 
-				{/* Form genérico para Adicionar, Baixar e Deletar (só muda a ação) */}
+				{/* Modo: Listar Baixas */}
+				{estoqueSelecionado && modoEstoque === "baixas" && (
+					<>
+						<h4 className="text-center mt-3">
+							Baixas no Estoque: {estoqueSelecionado.nome}
+						</h4>
+						{itensEstoque.length > 0 ? (
+							<ul className="list-group mt-3">
+								{itensEstoque.map((item) => (
+									<li key={item.id} className="list-group-item">
+										<strong>{item.produto.nome}</strong> — Quantidade:{" "}
+										{item.quantidade} — Motivo: {item.motivo} — Data:{" "}
+										{new Date(item.dataBaixa).toLocaleString()} — Preço Total:
+										R$ {item.precoTotal}
+									</li>
+								))}
+							</ul>
+						) : (
+							<p className="text-center mt-3">Nenhuma baixa encontrada.</p>
+						)}
 
-				{/* Adicionar Produtos */}
+						<div className="text-center mt-4">
+							<Button
+								variant="secondary"
+								size="lg"
+								onClick={() => {
+									setModoEstoque("menu");
+									setItensEstoque([]);
+									limparMensagem();
+								}}
+							>
+								🔙 Voltar
+							</Button>
+						</div>
+					</>
+				)}
+
+				{/* Modo: Adicionar Produtos */}
 				{estoqueSelecionado && modoEstoque === "adicionar" && (
 					<>
 						<h4 className="text-center mt-3">
@@ -374,7 +444,7 @@ function Estoques({ voltar }) {
 					</>
 				)}
 
-				{/* Dar Baixa */}
+				{/* Modo: Dar Baixa */}
 				{estoqueSelecionado && modoEstoque === "baixar" && (
 					<>
 						<h4 className="text-center mt-3">
@@ -397,6 +467,14 @@ function Estoques({ voltar }) {
 									onChange={(e) => setQuantidade(e.target.value)}
 								/>
 							</Form.Group>
+							<Form.Group className="mb-3" controlId="formMotivo">
+								<Form.Label>Motivo</Form.Label>
+								<Form.Control
+									type="text"
+									value={motivo}
+									onChange={(e) => setMotivo(e.target.value)}
+								/>
+							</Form.Group>
 							<div className="text-center mt-4 d-flex gap-3 justify-content-center">
 								<Button variant="primary" size="lg" onClick={darBaixa}>
 									Baixar
@@ -416,7 +494,7 @@ function Estoques({ voltar }) {
 					</>
 				)}
 
-				{/* Deletar Produtos */}
+				{/* Modo: Deletar Produtos */}
 				{estoqueSelecionado && modoEstoque === "deletar" && (
 					<>
 						<h4 className="text-center mt-3">
@@ -429,6 +507,14 @@ function Estoques({ voltar }) {
 									type="text"
 									value={codigoBarras}
 									onChange={(e) => setCodigoBarras(e.target.value)}
+								/>
+							</Form.Group>
+							<Form.Group className="mb-3" controlId="formMotivo">
+								<Form.Label>Motivo</Form.Label>
+								<Form.Control
+									type="text"
+									value={motivo}
+									onChange={(e) => setMotivo(e.target.value)}
 								/>
 							</Form.Group>
 							<div className="text-center mt-4 d-flex gap-3 justify-content-center">
@@ -450,11 +536,11 @@ function Estoques({ voltar }) {
 					</>
 				)}
 
-				{/* Botão "Voltar para Lista de Estoques" ou "Voltar ao Menu" */}
+				{/* Botão "Voltar para Lista de Estoques" */}
 				{estoqueSelecionado && (
 					<div className="text-center mt-4">
 						<Button variant="secondary" size="lg" onClick={voltarParaLista}>
-							Voltar aos Estoques
+							🔙 Voltar aos Estoques
 						</Button>
 					</div>
 				)}

@@ -81,7 +81,7 @@ function Relatorios({ voltar }) {
 					<Form.Group className="mb-3">
 						<Form.Label>ID do Estoque</Form.Label>
 						<Form.Control
-							type="text"
+							type="number"
 							value={estoqueId}
 							onChange={(e) => setEstoqueId(e.target.value)}
 							placeholder="Ex: 2"

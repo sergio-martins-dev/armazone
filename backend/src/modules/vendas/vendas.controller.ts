@@ -1,9 +1,13 @@
-import { Controller, Post, Get, Query, Body } from '@nestjs/common';
+import { Controller, Post, Get, Query, Body, Param } from '@nestjs/common';
 import { VendasService } from './vendas.service';
+import { EstoqueProdutoService } from '../estoque_produto/estoque_produto.service';
 
 @Controller('vendas')
 export class VendasController {
-  constructor(private readonly vendasService: VendasService) {}
+  constructor(
+    private readonly vendasService: VendasService,
+    private readonly estoqueProdutoService: EstoqueProdutoService,
+  ) {}
 
   @Post()
   registrarVenda(
@@ -36,5 +40,10 @@ export class VendasController {
       estoqueId,
       codigoBarras,
     );
+  }
+
+  @Get('baixas/:estoqueId')
+  async listarBaixas(@Param('estoqueId') estoqueId?: number) {
+    return this.estoqueProdutoService.listarBaixas(estoqueId);
   }
 }
