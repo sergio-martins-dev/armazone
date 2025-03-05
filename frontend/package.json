@@ -21,11 +21,13 @@
 	"build": {
 		"extends": null,
 		"directories": {
-			"output": "dist"
+			"output": "releases"
 		},
 		"files": [
-			"dist/**/*",
-			"backend/dist/**/*",
+			"!releases/win-unpacked",
+			"!releases/win32-x64",
+			"out/**/*",
+			"backend/releases/**/*",
 			"src/main.js",
 			"package.json"
 		],
