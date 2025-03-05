@@ -1,10 +1,29 @@
+const { spawn } = require("child_process");
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
 const url = require("url");
 
 let mainWindow;
 
+function startBackend() {
+	const backendPath = path.join(
+		__dirname,
+		"..",
+		"..",
+		"backend",
+		"dist",
+		"src",
+		"main.js"
+	);
+	const child = spawn(process.execPath, [backendPath], { stdio: "inherit" });
+
+	child.on("close", (code) => {
+		console.log(`Backend finalizado com código ${code}`);
+	});
+}
+
 app.whenReady().then(() => {
+	startBackend();
 	mainWindow = new BrowserWindow({
 		width: 1200,
 		height: 800,
@@ -13,7 +32,9 @@ app.whenReady().then(() => {
 		}
 	});
 
-	const isDev = !app.isPackaged; // 🔹 Verifica se está rodando no modo dev
+	const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : "production";
+
+	const isDev = NODE_ENV !== "production";
 
 	const startURL = isDev
 		? "http://localhost:3000" // 🔹 Carrega o React em desenvolvimento

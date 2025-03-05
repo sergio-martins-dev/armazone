@@ -46,6 +46,23 @@
 			"sourceMaps": true,
 			"skipFiles": ["<node_internals>/**"],
 			"trace": true
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Run Electron Production Build",
+			"runtimeExecutable": "node",
+			"runtimeArgs": ["node_modules/.bin/electron", "."],
+			"cwd": "${workspaceFolder}/frontend",
+			"env": {
+				"NODE_ENV": "production"
+			},
+			"windows": {
+				"runtimeArgs": ["node_modules/.bin/electron.cmd", "."]
+			},
+			"console": "integratedTerminal",
+			"outputCapture": "std",
+			"skipFiles": ["<node_internals>/**"]
 		}
 	]
 }

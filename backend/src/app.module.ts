@@ -10,17 +10,18 @@ import { EstoqueProdutoModule } from './modules/estoque_produto/estoque_produto.
 import { VendasModule } from './modules/vendas/vendas.module';
 import { VendaEntity } from './entities/venda.entity';
 import { BaixaEstoqueEntity } from './entities/baixa_estoque.entity';
+import { db } from 'config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
+      host: db.DB_HOST,
+      port: Number(db.DB_PORT),
+      username: db.DB_USERNAME,
+      password: db.DB_PASSWORD,
+      database: db.DB_NAME,
       entities: [
         ProdutoEntity,
         EstoqueEntity,

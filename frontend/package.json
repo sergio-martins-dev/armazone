@@ -12,11 +12,27 @@
 		"package": "electron-forge package",
 		"make": "electron-forge make",
 		"publish": "electron-forge publish",
+		"build:win": "electron-builder --win --x64",
 		"lint": "echo \"No linting configured\""
 	},
 	"keywords": [],
 	"author": "sergio",
 	"license": "MIT",
+	"build": {
+		"extends": null,
+		"directories": {
+			"output": "dist"
+		},
+		"files": [
+			"dist/**/*",
+			"backend/dist/**/*",
+			"src/main.js",
+			"package.json"
+		],
+		"win": {
+			"target": "nsis"
+		}
+	},
 	"devDependencies": {
 		"@babel/preset-env": "^7.26.9",
 		"@babel/preset-react": "^7.26.3",
